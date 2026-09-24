@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { createColumnHelper } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
@@ -16,6 +16,7 @@ import Image from "next/image";
 export type Category = {
   name: string;
   color_hex: string;
+  icon: string;
 };
 export type Transaction = {
   id: number;
@@ -89,18 +90,14 @@ export const columns = columnHelper.columns([
 
     cell: (info) => {
       const hexColor = info.getValue();
+      const icon = info.row.original.categories.icon;
 
       return (
         <div
           className="flex items-center justify-center w-12 h-12 rounded-4xl"
           style={{ backgroundColor: hexColor }}
         >
-          <Image
-            src="/globe.svg" //Change this when the img field is added
-            width={30}
-            height={30}
-            alt="icon"
-          ></Image>
+          <Image src={icon} width={30} height={30} alt="icon"></Image>
         </div>
       );
     },

@@ -36,7 +36,7 @@ const chartData = data.transactions;
 //         "name": "Running & Fitness",
 //         "color_hex": "#F59E0B"
 //       }
-
+  
 // const chartData = [
 //   { date: "2026-01-30", desktop: 434, mobile: 380 },
 //   { date: "2026-02-30", desktop: 448, mobile: 490 },
