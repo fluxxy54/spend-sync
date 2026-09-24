@@ -43,7 +43,7 @@ export default async function DemoPage() {
 
   return (
     <>
-      <div className="container mx-auto p-10">
+      <div className="container mx-auto p-5">
         {/* FIX 2: Pass 'data', which now contains the array returned from getData() */}
         <DataTable columns={columns} data={data} />
       </div>

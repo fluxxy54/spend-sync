@@ -70,7 +70,7 @@ export function DataTable<TData extends RowData>({
     <>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter categories..."
+          placeholder="Filter description..."
           value={
             (table.getColumn("description")?.getFilterValue() as string) ?? ""
           }

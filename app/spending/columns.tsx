@@ -1,13 +1,15 @@
-"use client";
+'use client';
 
 import { createColumnHelper } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
+// import { MoreHorizontal } from "lucide-react";
 
 import { type DataTableFeatures } from "./data-table-features";
 // import { Button } from "@/components/ui/button";
 // import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -90,9 +92,16 @@ export const columns = columnHelper.columns([
 
       return (
         <div
-          className="w-12 h-12 rounded-4xl"
+          className="flex items-center justify-center w-12 h-12 rounded-4xl"
           style={{ backgroundColor: hexColor }}
-        ></div>
+        >
+          <Image
+            src="/globe.svg" //Change this when the img field is added
+            width={30}
+            height={30}
+            alt="icon"
+          ></Image>
+        </div>
       );
     },
   }),
