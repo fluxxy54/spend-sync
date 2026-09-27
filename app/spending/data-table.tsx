@@ -34,11 +34,15 @@ import { features, type DataTableFeatures } from "./data-table-features";
 interface DataTableProps<TData extends RowData> {
   columns: ColumnDef<DataTableFeatures, TData>[];
   data: TData[];
+  liveRefreshUrl?: string;
+  refreshIntervalMs?: number;
 }
 
 export function DataTable<TData extends RowData>({
   columns,
   data,
+  liveRefreshUrl,
+  refreshIntervalMs = 15000,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -48,10 +52,64 @@ export function DataTable<TData extends RowData>({
     React.useState<ColumnVisibilityState>({});
 
   const [rowSelection, setRowSelection] = React.useState({});
+  const [liveData, setLiveData] = React.useState<TData[]>(data);
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
+  const [lastUpdated, setLastUpdated] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLiveData(data);
+  }, [data]);
+
+  React.useEffect(() => {
+    if (!liveRefreshUrl) {
+      return;
+    }
+
+    let active = true;
+    const controller = new AbortController();
+
+    const loadData = async () => {
+      try {
+        setIsRefreshing(true);
+        const response = await fetch(liveRefreshUrl, {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to refresh data (${response.status})`);
+        }
+
+        const payload = (await response.json()) as { transactions?: TData[] };
+
+        if (active) {
+          setLiveData(payload.transactions ?? []);
+          setLastUpdated(new Date().toLocaleTimeString("en-US"));
+        }
+      } catch {
+        if (active) {
+          setLiveData(data);
+        }
+      } finally {
+        if (active) {
+          setIsRefreshing(false);
+        }
+      }
+    };
+
+    void loadData();
+    const intervalId = window.setInterval(loadData, refreshIntervalMs);
+
+    return () => {
+      active = false;
+      controller.abort();
+      window.clearInterval(intervalId);
+    };
+  }, [data, liveRefreshUrl, refreshIntervalMs]);
 
   const table = useTable({
     features,
-    data,
+    data: liveRefreshUrl ? liveData : data,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -79,6 +137,14 @@ export function DataTable<TData extends RowData>({
           }
           className="max-w-sm"
         />
+
+        {liveRefreshUrl ? (
+          <p className="ml-3 text-sm text-muted-foreground">
+            {isRefreshing
+              ? "Refreshing live data..."
+              : `Last updated ${lastUpdated ?? "just now"}`}
+          </p>
+        ) : null}
 
         <DropdownMenu>
           <DropdownMenuTrigger

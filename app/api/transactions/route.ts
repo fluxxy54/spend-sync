@@ -2,12 +2,15 @@
 import { NextResponse } from "next/server";
 import { createClient } from "../../../utils/supabase/server";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const query = searchParams.get("q")?.trim() ?? "";
+
   // 1. Initialize the Supabase connection
   const supabase = await createClient();
 
   // 2. Execute the query (This performs a JOIN on the Categories table)
-  const { data, error } = await supabase
+  let queryBuilder = supabase
     .from("transactions")
     .select(
       `
@@ -19,6 +22,12 @@ export async function GET() {
     `,
     )
     .order("date", { ascending: false });
+
+  if (query) {
+    queryBuilder = queryBuilder.ilike("description", `%${query}%`);
+  }
+
+  const { data, error } = await queryBuilder;
 
   // 3. Handle errors
   if (error) {
