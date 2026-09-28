@@ -3,6 +3,7 @@ import { ChartPie } from "@/components/pie-chart";
 import { SectionCard } from "@/components/section-cards";
 import { columns } from "./spending/columns";
 import { DataTable } from "./spending/data-table";
+import { AddButton } from "@/components/AddExpenses";
 
 const response = await fetch("http://localhost:3000/api/summary");
 if (!response.ok) {
@@ -37,8 +38,11 @@ export default function Home() {
     <main className="p-5">
       <h1 className="text-3xl mb-5">Home</h1>
       <div className="grid grid-cols-3 gap-4">
-        <div className="col-span-full">
+        <div className="col-span-1">
           <SectionCard {...userData} />
+        </div>
+        <div className="col-span-2">
+          <AddButton />
         </div>
         <div className="">
           <SectionCard {...userIncome} />

@@ -15,6 +15,7 @@ import Image from "next/image";
 // You can use a Zod schema here if you want.
 export type Category = {
   name: string;
+  type: string;
   color_hex: string;
   icon: string;
 };
@@ -78,6 +79,9 @@ export const columns = columnHelper.columns([
     },
   }),
   columnHelper.accessor("date", {}),
+  columnHelper.accessor("categories.type", {
+    header: "Type",
+  }),
   columnHelper.accessor("description", {
     header: "Description",
   }),

@@ -1,6 +1,12 @@
 // app/api/transactions/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "../../../utils/supabase/server";
+type SaveRequest = {
+  amount: number;
+  date: string;
+  category_id: number;
+  description: string | null;
+};
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -18,7 +24,7 @@ export async function GET(request: Request) {
       amount,
       date,
       description,
-      categories ( name, color_hex,icon )
+      categories ( name,type, color_hex,icon )
     `,
     )
     .order("date", { ascending: false });
@@ -37,3 +43,10 @@ export async function GET(request: Request) {
   // 4. Return the formatted JSON payload to your Client Components
   return NextResponse.json({ transactions: data });
 }
+
+// export async function POST(request:Request) {
+//   try{
+
+//   }
+
+// }
