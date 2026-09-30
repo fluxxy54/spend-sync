@@ -42,7 +42,7 @@ export function DataTable<TData extends RowData>({
   columns,
   data,
   liveRefreshUrl,
-  refreshIntervalMs = 15000,
+  refreshIntervalMs = 5000,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

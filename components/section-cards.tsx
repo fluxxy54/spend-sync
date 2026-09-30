@@ -26,7 +26,7 @@ export function SectionCard({ name, number, percent }: UserCardProps) {
             {number}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">{percent}</Badge>
+            <Badge variant="outline">{percent}</Badge>  
           </CardAction>
         </CardHeader>
       </Card>

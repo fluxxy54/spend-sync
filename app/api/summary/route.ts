@@ -22,7 +22,9 @@ export async function GET() {
   // 3. Process the data server-side
   data.forEach((tx) => {
     const amount = Number(tx.amount);
-    const categoryType = tx.categories?.type;
+
+    const category = tx.categories as unknown as { type: string };
+    const categoryType = category?.type;
 
     if (categoryType === "Income") {
       totalIncome += amount;

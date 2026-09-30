@@ -1,8 +1,6 @@
 "use client";
 
-// import { TrendingUp } from "lucide-react";
 import { Pie, PieChart } from "recharts";
-
 import {
   Card,
   CardContent,
@@ -15,26 +13,30 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  type ChartConfig,
 } from "@/components/ui/chart";
 
 export const description = "A pie chart with a custom label";
-const response = await fetch("http://localhost:3000/api/category");
 
-if (!response.ok) {
-  throw new Error(`HTTP error! Status: ${response.status}`);
-}
+type ChartPieProps = {
+  chartData: { category_name: string; total_spent: number; fill: string }[];
+  chartConfig: ChartConfig;
+};
+// if (!response.ok) {
+//   throw new Error(`HTTP error! Status: ${response.status}`);
+// }
 
-const data = await response.json();
+// const data = await response.json();
 
-const chartData = data.transactions.map(
-  (transaction: { color_hex: string }) => ({
-    ...transaction,
-    fill: transaction.color_hex, // Recharts needs this exact property name
-  }),
-);
-const chartConfig = data.transactions;
-const today = new Date();
-export function ChartPie() {
+// const chartData = data.transactions.map(
+//   (transaction: { color_hex: string }) => ({
+//     ...transaction,
+//     fill: transaction.color_hex, // Recharts needs this exact property name
+//   }),
+// );
+// const chartConfig = data.transactions;
+export function ChartPie({ chartData, chartConfig }: ChartPieProps) {
+  const today = new Date();
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
