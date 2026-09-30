@@ -1,4 +1,4 @@
-"use client";
+"use client"; 
 
 import { useEffect, useState } from "react";
 import { ChartBarInteractive } from "@/components/bar-chart";
@@ -140,7 +140,12 @@ export default function Home() {
           <SectionCard {...userSaving} />
         </div>
         <div className="col-span-2">
-          <ChartBarInteractive />
+          <ChartBarInteractive
+            data={transactions.map((transaction) => ({
+              date: transaction.date,
+              amount: Number(transaction.amount),
+            }))}
+          />
         </div>
         <div className="col-span-1">
           <ChartPie chartData={chartData} chartConfig={chartConfig} />

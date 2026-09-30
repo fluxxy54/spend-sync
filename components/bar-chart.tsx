@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-
 import {
   Card,
   CardContent,
@@ -17,34 +16,6 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 
-export const description = "An interactive bar chart";
-const response = await fetch("http://localhost:3000/api/transactions");
-
-if (!response.ok) {
-  throw new Error(`HTTP error! Status: ${response.status}`);
-}
-
-const data = await response.json();
-const chartData = data.transactions;
-
-// {
-//       "id": 6,
-//       "amount": 600,
-//       "date": "2026-09-20",
-//       "description": "AUC 24-Hour Relay Registration fee",
-//       "categories": {
-//         "name": "Running & Fitness",
-//         "color_hex": "#F59E0B"
-//       }
-  
-// const chartData = [
-//   { date: "2026-01-30", desktop: 434, mobile: 380 },
-//   { date: "2026-02-30", desktop: 448, mobile: 490 },
-//   { date: "2026-03-30", desktop: 149, mobile: 200 },
-//   { date: "2026-04-30", desktop: 103, mobile: 160 },
-//   { date: "2026-05-30", desktop: 446, mobile: 400 },
-// ];
-
 const chartConfig = {
   views: {
     label: "Page Views",
@@ -55,17 +26,17 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ChartBarInteractive() {
-  const [activeChart, setActiveChart] =
-    React.useState<keyof typeof chartConfig>("amount");
+type Transaction = {
+  date: string;
+  amount: number;
+};
 
-  //   const total = React.useMemo(
-  //     () => ({
-  //       desktop: chartData.reduce((acc, curr) => acc + curr.desktop, 0),
-  //       mobile: chartData.reduce((acc, curr) => acc + curr.mobile, 0),
-  //     }),
-  //     []
-  //   )
+type ChartBarInteractiveProps = {
+  data?: Transaction[];
+};
+
+export function ChartBarInteractive({ data = [] }: ChartBarInteractiveProps) {
+  const [activeChart] = React.useState<keyof typeof chartConfig>("amount");
 
   return (
     <Card className="py-2">
@@ -84,7 +55,7 @@ export function ChartBarInteractive() {
         >
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={data}
             margin={{
               left: 12,
               right: 12,

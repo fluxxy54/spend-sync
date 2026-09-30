@@ -1,37 +1,43 @@
-import { ChartBarInteractive } from "@/components/bar-chart";
-import { ChartLine } from "@/components/line-chart";
-import { ChartPie } from "@/components/pie-chart";
-import React from "react";
-import { getTransactionSummary } from "@/lib/summary";
+import { BudgetDashboard } from "@/components/budget-dashboard";
+import { createClient } from "@/utils/supabase/server";
 import { GET as getCategoryData } from "@/app/api/category/route";
 
-const budget = async () => {
-  const categoryRes = await getCategoryData();
+const BudgetPage = async () => {
+  const supabase = await createClient();
+  const [categoryRes, transactionsResult] = await Promise.all([
+    getCategoryData(),
+    supabase
+      .from("transactions")
+      .select(
+        "id, amount, date, description, categories ( name, type, color_hex, icon )",
+      )
+      .order("date", { ascending: false }),
+  ]);
+
   const categoryRawData = await categoryRes.json();
-  const chartData = (categoryRawData?.transactions || []).map(
+  const pieChartData = (categoryRawData?.transactions || []).map(
     (transaction: { color_hex: string }) => ({
       ...transaction,
       fill: transaction.color_hex,
     }),
   );
-  const chartConfig = categoryRawData?.transactions || {};
-  return (
-    <>
-      {/* <div className="p-5">budget</div> */}
 
-      <div className="grid grid-cols-3 gap-4 p-5 ">
-        <div className="col-span-2">
-          <ChartLine />
-        </div>
-        <div>
-          <ChartPie chartData={chartData} chartConfig={chartConfig} />
-        </div>
-        <div className="h-10 col-span-3">
-          <ChartBarInteractive />
-        </div>
-      </div>
-    </>
+  const chartConfig = categoryRawData?.transactions || {};
+  const lineChartData = (transactionsResult.data ?? []).map((txn) => ({
+    date: txn.date,
+    amount: Number(txn.amount),
+  }));
+
+  const barChartData = lineChartData;
+
+  return (
+    <BudgetDashboard
+      lineChartData={lineChartData}
+      barChartData={barChartData}
+      pieChartData={pieChartData}
+      chartConfig={chartConfig}
+    />
   );
 };
 
-export default budget;
+export default BudgetPage;

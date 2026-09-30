@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  //   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -22,19 +21,7 @@ type ChartPieProps = {
   chartData: { category_name: string; total_spent: number; fill: string }[];
   chartConfig: ChartConfig;
 };
-// if (!response.ok) {
-//   throw new Error(`HTTP error! Status: ${response.status}`);
-// }
 
-// const data = await response.json();
-
-// const chartData = data.transactions.map(
-//   (transaction: { color_hex: string }) => ({
-//     ...transaction,
-//     fill: transaction.color_hex, // Recharts needs this exact property name
-//   }),
-// );
-// const chartConfig = data.transactions;
 export function ChartPie({ chartData, chartConfig }: ChartPieProps) {
   const today = new Date();
   return (
@@ -72,14 +59,6 @@ export function ChartPie({ chartData, chartConfig }: ChartPieProps) {
           </PieChart>
         </ChartContainer>
       </CardContent>
-      {/* <CardFooter className="flex-col gap-2 text-sm"> */}
-      {/* <div className="flex items-center gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total total_spent for the last 6 months
-        </div> */}
-      {/* </CardFooter> */}
     </Card>
   );
 }

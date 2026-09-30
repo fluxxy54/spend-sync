@@ -1,13 +1,11 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -19,32 +17,6 @@ import {
 } from "@/components/ui/chart";
 
 export const description = "A line chart";
-const response = await fetch("http://localhost:3000/api/transactions");
-
-if (!response.ok) {
-  throw new Error(`HTTP error! Status: ${response.status}`);
-}
-
-const data = await response.json();
-
-const chartData = data.transactions;
-// {
-//       "id": 6,
-//       "amount": 600,
-//       "date": "2026-09-20",
-//       "description": "AUC 24-Hour Relay Registration fee",
-//       "categories": {
-//         "name": "Running & Fitness",
-//         "color_hex": "#F59E0B"
-//       }
-// [
-//   { month: "January", desktop: 186 },
-//   { month: "February", desktop: 305 },
-//   { month: "March", desktop: 237 },
-//   { month: "April", desktop: 73 },
-//   { month: "May", desktop: 209 },
-//   { month: "June", desktop: 214 },
-// ];
 
 const chartConfig = {
   amount: {
@@ -53,7 +25,16 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ChartLine() {
+type ChartLineData = {
+  date: string;
+  amount: number;
+};
+
+type ChartLineProps = {
+  data?: ChartLineData[];
+};
+
+export function ChartLine({ data = [] }: ChartLineProps) {
   return (
     <Card>
       <CardHeader>
@@ -64,7 +45,7 @@ export function ChartLine() {
         <ChartContainer config={chartConfig} className="max-h-62.5 w-full">
           <LineChart
             accessibilityLayer
-            data={chartData}
+            data={data}
             margin={{
               left: 12,
               right: 12,
@@ -92,14 +73,6 @@ export function ChartLine() {
           </LineChart>
         </ChartContainer>
       </CardContent>
-      {/* <CardFooter className="flex-col items-start gap-2 text-sm"> */}
-      {/* <div className="flex gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div> */}
-      {/* </CardFooter> */}
     </Card>
   );
 }
