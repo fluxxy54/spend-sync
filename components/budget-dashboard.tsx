@@ -24,16 +24,16 @@ export function BudgetDashboard({
   chartConfig,
 }: BudgetDashboardProps) {
   return (
-    <div className="grid grid-cols-3 gap-4 p-5">
-      <div className="col-span-2">
+    <div className="grid gap-4 xl:grid-cols-[1.5fr_1fr]">
+      <div className="min-h-[320px]">
         <ChartLine data={lineChartData} />
       </div>
 
-      <div>
+      <div className="min-h-[320px]">
         <ChartPie chartData={pieChartData} chartConfig={chartConfig} />
       </div>
 
-      <div className="h-10 col-span-3">
+      <div className="xl:col-span-2">
         <ChartBarInteractive data={barChartData} />
       </div>
     </div>

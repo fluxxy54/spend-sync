@@ -1,22 +1,53 @@
 # SpendSync
 
-## Overview
+SpendSync is a finance analytics dashboard for tracking personal spending, monitoring category performance, and understanding cash-flow trends through a responsive web interface.
 
-SpendSync is a full-stack finance analytics dashboard built to track daily transactions, visualize categorical budget pacing, and manage personal cash flow. The platform bridges structured ledger tracking with dynamic graphical analysis through a responsive, custom-built interface.
+## Features
 
-## Tech Stack
+- Transaction overview dashboard with summary cards
+- Add-expense form with category selection and date validation
+- Searchable and sortable transaction table
+- Interactive charts for spending trends and category distribution
+- Budget-focused analytics page for monthly and category-level insights
+- Secure server-side validation before writing to the database
 
-* **Frontend:** React, Tailwind CSS, shadcn/ui
-* **Data Visualization & Grids:** Chart.js, DataTables.js
-* **Backend:** Node.js, Express.js
-* **Database:** PostgreSQL
+## Stack
 
-## Core Features
+- Frontend: Next.js 16, React, TypeScript, Tailwind CSS
+- UI system: shadcn/ui components
+- Data viz: Recharts
+- Backend: Next.js Route Handlers
+- Persistence: Supabase + PostgreSQL
 
-* **Transaction Analytics Grid:** A centralized, tabular ledger supporting real-time search, column sorting, and pagination.
-* **Financial Visualizer:** Dynamic graphical dashboards including comparative grouped bar charts for budget pacing and doughnut charts for total utilization.
-* **Asynchronous Integration:** AJAX-powered quick-capture forms that update the database and refresh UI elements instantly without triggering full page reloads.
+## Local setup
 
-## Development
+1. Install dependencies:
+   npm install
+2. Configure Supabase environment variables in a local .env file:
+   NEXT_PUBLIC_SUPABASE_URL=your-project-url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+3. Start the app:
+   npm run dev
+4. Open http://localhost:3000
 
-This project is currently in the Phase 1 (Conception) stage for the *Getting started in Web Programming (DLBITPEWP01_E)* course.
+## Project structure
+
+- app/ — route pages and API handlers
+- components/ — reusable dashboard and chart UI
+- utils/supabase/ — Supabase server client configuration
+- public/ — static assets
+
+## Security and quality checks
+
+- API input validation for amount, date, category ID, and description length
+- Environment guard to fail clearly when Supabase is not configured
+- Defensive handling for missing database data or failed API requests
+- Pagination and filtering on transaction fetches to reduce unnecessary payload sizes
+
+## Future enhancements
+
+- User authentication and per-user accounts
+- CSV/PDF export for transaction reports
+- Server-side filtering, pagination, and analytics for larger data sets
+- Hosted deployment with Vercel or another production environment
+- Budget alerts and recurring-expense automation

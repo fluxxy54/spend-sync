@@ -1,21 +1,17 @@
-// app/api/transactions/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "../../../utils/supabase/server";
-type SaveRequest = {
-  amount: number;
-  date: string;
-  category_id: number;
-  description: string | null;
-};
 
-export async function GET(request: Request) {
+export async function GET(request: Request | NextRequest) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q")?.trim() ?? "";
+  const categoryId = searchParams.get("category_id")?.trim();
+  const from = searchParams.get("from")?.trim();
+  const to = searchParams.get("to")?.trim();
+  const requestedLimit = Number(searchParams.get("limit") ?? "50");
+  const limit = Number.isFinite(requestedLimit) && requestedLimit > 0 && requestedLimit <= 250 ? requestedLimit : 50;
 
-  // 1. Initialize the Supabase connection
   const supabase = await createClient();
 
-  // 2. Execute the query (This performs a JOIN on the Categories table)
   let queryBuilder = supabase
     .from("transactions")
     .select(
@@ -24,29 +20,41 @@ export async function GET(request: Request) {
       amount,
       date,
       description,
-      categories ( name,type, color_hex,icon )
+      category_id,
+      categories ( name, type, color_hex, icon )
     `,
     )
-    .order("date", { ascending: false });
+    .order("date", { ascending: false })
+    .limit(limit);
 
   if (query) {
     queryBuilder = queryBuilder.ilike("description", `%${query}%`);
   }
 
+  if (categoryId) {
+    const parsedCategoryId = Number(categoryId);
+    if (!Number.isInteger(parsedCategoryId) || parsedCategoryId <= 0) {
+      return NextResponse.json(
+        { error: "category_id must be a positive integer." },
+        { status: 400 },
+      );
+    }
+    queryBuilder = queryBuilder.eq("category_id", parsedCategoryId);
+  }
+
+  if (from && /^\d{4}-\d{2}-\d{2}$/.test(from)) {
+    queryBuilder = queryBuilder.gte("date", from);
+  }
+
+  if (to && /^\d{4}-\d{2}-\d{2}$/.test(to)) {
+    queryBuilder = queryBuilder.lte("date", to);
+  }
+
   const { data, error } = await queryBuilder;
 
-  // 3. Handle errors
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // 4. Return the formatted JSON payload to your Client Components
-  return NextResponse.json({ transactions: data });
+  return NextResponse.json({ transactions: data ?? [] });
 }
-
-// export async function POST(request:Request) {
-//   try{
-
-//   }
-
-// }
