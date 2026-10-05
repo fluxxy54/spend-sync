@@ -1,53 +1,73 @@
 # SpendSync
 
-SpendSync is a finance analytics dashboard for tracking personal spending, monitoring category performance, and understanding cash-flow trends through a responsive web interface.
+SpendSync is a lightweight finance analytics dashboard for tracking personal spending, monitoring category performance, and understanding cash-flow trends.
 
-## Features
+## Key Features
 
 - Transaction overview dashboard with summary cards
 - Add-expense form with category selection and date validation
 - Searchable and sortable transaction table
 - Interactive charts for spending trends and category distribution
 - Budget-focused analytics page for monthly and category-level insights
-- Secure server-side validation before writing to the database
+- Server-side validation and defensive API handlers
 
-## Stack
+## Tech Stack
 
 - Frontend: Next.js 16, React, TypeScript, Tailwind CSS
-- UI system: shadcn/ui components
-- Data viz: Recharts
-- Backend: Next.js Route Handlers
-- Persistence: Supabase + PostgreSQL
+- UI: shadcn/ui components
+- Charts: Recharts
+- Backend: Next.js Route Handlers (Route API)
+- Database: Supabase / PostgreSQL
 
-## Local setup
+## Prerequisites
+
+- Node.js 18+ and npm
+- A Supabase project (for local dev you can use the free tier)
+
+## Quickstart (local)
 
 1. Install dependencies:
+
    npm install
-2. Configure Supabase environment variables in a local .env file:
+
+2. Create a `.env.local` file at the project root and add your Supabase keys:
+
    NEXT_PUBLIC_SUPABASE_URL=your-project-url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-3. Start the app:
+   # Optional (used by some server handlers): SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+3. Start the development server:
+
    npm run dev
-4. Open http://localhost:3000
 
-## Project structure
+4. Open the app in your browser:
 
-- app/ — route pages and API handlers
-- components/ — reusable dashboard and chart UI
-- utils/supabase/ — Supabase server client configuration
-- public/ — static assets
+   http://localhost:3000
 
-## Security and quality checks
+## Scripts
 
-- API input validation for amount, date, category ID, and description length
-- Environment guard to fail clearly when Supabase is not configured
-- Defensive handling for missing database data or failed API requests
-- Pagination and filtering on transaction fetches to reduce unnecessary payload sizes
+- `npm run dev` — starts the Next.js dev server
+- `npm run build` — builds the production app
+- `npm run start` — serves the built app (after `build`)
 
-## Future enhancements
+Check `package.json` for additional scripts (lint/test/etc.).
 
-- User authentication and per-user accounts
-- CSV/PDF export for transaction reports
-- Server-side filtering, pagination, and analytics for larger data sets
-- Hosted deployment with Vercel or another production environment
-- Budget alerts and recurring-expense automation
+## Project layout (high level)
+
+- `app/` — Next.js route pages and API handlers
+- `components/` — reusable UI and chart components
+- `utils/supabase/` — Supabase client and helpers
+- `public/` — static assets
+
+## Notes on security & validation
+
+- API route handlers perform basic validation (amount, date, category, description length) before writing to the database.
+- The app expects Supabase env vars to be set; server handlers will throw clear errors if configuration is missing.
+
+## Contributing
+
+Contributions, issues, and feature requests are welcome. Please open a PR or issue describing the change.
+
+## License
+
+This project does not include a license file. Add one if you plan to publish or share the project.
