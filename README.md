@@ -2,6 +2,10 @@
 
 SpendSync is a lightweight finance analytics dashboard for tracking personal spending, monitoring category performance, and understanding cash-flow trends.
 
+🌐 **Live Demo:** [https://spend-sync.ya9423561.workers.dev/](https://spend-sync.ya9423561.workers.dev/)
+
+---
+
 ## Key Features
 
 - Transaction overview dashboard with summary cards
@@ -13,61 +17,85 @@ SpendSync is a lightweight finance analytics dashboard for tracking personal spe
 
 ## Tech Stack
 
-- Frontend: Next.js 16, React, TypeScript, Tailwind CSS
-- UI: shadcn/ui components
-- Charts: Recharts
-- Backend: Next.js Route Handlers (Route API)
-- Database: Supabase / PostgreSQL
+- **Frontend & Fullstack Framework:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4
+- **Runtime & Deployment:** Cloudflare Workers via [Vinext](https://vinext.dev/) & `@cloudflare/vite-plugin`
+- **UI & Components:** shadcn/ui, Base UI, Lucide React
+- **Charts:** Recharts
+- **Database:** Supabase / PostgreSQL
+- **Tooling:** Vite, Wrangler
 
 ## Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 20+ and npm
 - A Supabase project (for local dev you can use the free tier)
+- A Cloudflare account (for deployment)
 
-## Quickstart (local)
+## Quickstart (Local)
 
-1. Install dependencies:
+1. Clone and install dependencies:
 
+   ```bash
    npm install
+   ```
 
 2. Create a `.env.local` file at the project root and add your Supabase keys:
 
+   ```env
    NEXT_PUBLIC_SUPABASE_URL=your-project-url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-   # Optional (used by some server handlers): SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+   # Optional: SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+   ```
 
 3. Start the development server:
 
+   ```bash
    npm run dev
+   ```
 
-4. Open the app in your browser:
+   Or run with Vite/Vinext:
 
-   http://localhost:3000
+   ```bash
+   npm run dev:vinext
+   ```
+
+4. Open the app in your browser at `http://localhost:3000` (or `http://localhost:3001` for Vinext).
 
 ## Scripts
 
-- `npm run dev` — starts the Next.js dev server
-- `npm run build` — builds the production app
-- `npm run start` — serves the built app (after `build`)
+- `npm run dev` — Starts the Next.js development server
+- `npm run dev:vinext` — Starts the Vite/Vinext development server (port 3001)
+- `npm run build` — Builds the production app for Cloudflare Workers using Vinext/Vite
+- `npm run build:next` — Builds the standard Next.js production bundle
+- `npm run deploy` — Deploys the built worker and assets to Cloudflare Workers via Wrangler
+- `npm run lint` — Runs ESLint
 
-Check `package.json` for additional scripts (lint/test/etc.).
+## Deployment to Cloudflare Workers
 
-## Project layout (high level)
+SpendSync is configured to deploy directly to **Cloudflare Workers** using **Vinext** and **Wrangler**:
 
-- `app/` — Next.js route pages and API handlers
-- `components/` — reusable UI and chart components
-- `utils/supabase/` — Supabase client and helpers
-- `public/` — static assets
+1. **Configuration:**
+   - Worker entrypoint and assets are configured in [`wrangler.jsonc`](./wrangler.jsonc).
+   - Vite environment build settings are managed in [`vite.config.ts`](./vite.config.ts).
 
-## Notes on security & validation
+2. **Cloudflare Dashboard (Workers Builds):**
+   - **Build command:** `npm run build`
+   - **Deploy command:** `npx wrangler deploy`
 
-- API route handlers perform basic validation (amount, date, category, description length) before writing to the database.
-- The app expects Supabase env vars to be set; server handlers will throw clear errors if configuration is missing.
+3. **Environment Variables:**
+   Add the following under **Worker Settings > Variables and Secrets**:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-## Contributing
+## Project Layout
 
-Contributions, issues, and feature requests are welcome. Please open a PR or issue describing the change.
+- `app/` — Next.js App Router pages and API handlers
+- `components/` — Reusable UI, forms, and chart components
+- `components/ui/` — shadcn/ui primitive components
+- `utils/supabase/` — Supabase server and client initialization
+- `public/` — Static assets (SVGs and icons)
+- `wrangler.jsonc` — Cloudflare Worker and asset bindings configuration
+- `vite.config.ts` — Vite & Vinext Cloudflare bundler configuration
 
 ## License
 
-This project does not include a license file. Add one if you plan to publish or share the project.
+This project is licensed under the MIT License.
